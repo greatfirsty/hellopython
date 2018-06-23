@@ -9,4 +9,9 @@ print('我明明多谢了一些东西的')
 print('lala')
 for i in range(100)
    print('xiangming%d'%i)
+
 print('这东西太麻烦了，光这个我都不耐烦了我’）
+
+print('aaaaaa,woxiangganle')
+print('henfan')
+
