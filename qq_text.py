@@ -23,4 +23,6 @@ try:
 except Exception as e:
     print(e)
 #添加邮件头
-mail['from']表示
+#mail['from']表示发送者信息，包括姓名和邮件
+#mail['to']表示接受者的信息，包括姓名和邮件
+#mail['subject']表示摘要主题信息
