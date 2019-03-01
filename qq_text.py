@@ -22,3 +22,5 @@ try:
     srv.quit()
 except Exception as e:
     print(e)
+#添加邮件头
+mail['from']表示
