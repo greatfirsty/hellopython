@@ -3,7 +3,7 @@ from email.mime.text import  MIMEText
 
 msg = MIMEText('hello python now i am coming')
 from_addr = '1640191389@qq.com'
-from_pwd ='hbftrbzffzbqefjf'
+from_pwd ='hbftrbzff'
 
 to_addr = '18330016979@163.com'
 smtp_srv = 'smtp.qq.com'
