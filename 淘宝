@@ -1,0 +1,50 @@
+from lxml import etree
+
+import js2xml
+import requests
+from bs4 import BeautifulSoup
+#url 规则  s = i*44 可以设置翻页
+url1 =  'https://s.taobao.com/search?initiative_id=tbindexz_20170306&ie=utf8&spm=a21bo.2017.201856-taobao-item.2&sourceId=tb.index&search_type=item&ssid=s5-e&commend=all&imgfile=&q=%E6%AF%8D%E5%A9%B4%E7%94%A8%E5%93%81&suggest=history_1&_input_charset=utf-8&wq=muyingyongpin&suggest_query=muyingyongpin&source=suggest&bcoffset=-3&ntoffset=-3&p4ppushleft=1%2C48&s=44'
+url = "https://s.taobao.com/search?initiative_id=tbindexz_20170306&ie=utf8&spm=a21bo.2017.201856-taobao-item.2&sourceId=tb.index&search_type=item&ssid=s5-e&commend=all&imgfile=&q=%E6%AF%8D%E5%A9%B4%E7%94%A8%E5%93%81&suggest=history_1&_input_charset=utf-8&wq=muyingyongpin&suggest_query=muyingyongpin&source=suggest"
+headers ={
+'cookie': 'miid=259796872071371989; hng=CN%7Czh-CN%7CCNY%7C156; cna=6z/SE+Qbd20CAW/J3mj/lJ5/; t=c89484a6003834152627f7644344a815; thw=cn; uc3=vt3=F8dByEiYDH6A%2FoWLsTs%3D&id2=UUtKd1q89x7WCw%3D%3D&nk2=2QtWUzRIJ8J0%2FQ%3D%3D&lg2=WqG3DMC9VAQiUQ%3D%3D; tracknick=%5Cu97E9%5Cu8D5B%5Cu8D5B1415; lgc=%5Cu97E9%5Cu8D5B%5Cu8D5B1415; _cc_=URm48syIZQ%3D%3D; tg=0; enc=KfGT2PRGP9CklsQNLJwimB4%2BQ4%2F5CX%2F57gQf%2Fbp5dfO5sflLlaesn3Kim3RMbM3VwA8Wy1zsq1Vpa5acKFx3BA%3D%3D; mt=ci=8_1; x=e%3D1%26p%3D*%26s%3D0%26c%3D0%26f%3D0%26g%3D0%26t%3D0%26__ll%3D-1%26_ato%3D0; _m_h5_tk=2721986a62bf41c9ea90f3cb7b8bfba7_1555243803236; _m_h5_tk_enc=73850b42dc35538d99addb55148f666f; v=0; uc1=cookie14=UoTZ4Sb%2B9bgqBw%3D%3D; cookie2=1f30f3800b4015b794391a41ef71504e; _tb_token_=e577bb6bee33f; JSESSIONID=AE8B4939F4412DD10904E1FD08E15E7F; alitrackid=www.taobao.com; lastalitrackid=www.taobao.com; l=bBPwpkxrvAaPptJSBOCwCuI8LO_OSIRvjuPRwCVMi_5ZL6L_UZbOla69LFp6Vj5R_xYB4keiqTJ9-etui; isg=BLKy6Ob5Ong15AZpi7jkL1vRA_hU67fU-XC-hHyL3mVQD1IJZNMG7bjt--sWVC51; swfstore=182475',
+'referer': 'https://www.taobao.com/',
+'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
+
+
+}
+resp=requests.get(url=url1,headers=headers)
+resp= resp.text
+
+soup = BeautifulSoup(resp,"lxml")
+
+titles = soup.select("body  script")
+
+
+src = soup.select('head script')[7].string
+
+src_text = js2xml.parse(src,  debug=False)
+
+src_tree = js2xml.pretty_print(src_text)
+
+selector = etree.HTML(src_tree)
+content = selector.xpath("//property[@name = 'raw_title']/string/text()")
+detail_url = selector.xpath("//property[@name = 'detail_url']/string/text()")
+price = selector.xpath("//property[@name = 'view_price']/string/text()")
+name = selector.xpath("//property[@name = 'nick']/string/text()")
+comment = selector.xpath("//property[@name = 'comment_count']/string/text()")
+
+data1={
+
+}
+list=[]
+for i in range(len(comment)):
+    data = {
+        'content': content[i],
+        'detail_url': detail_url[i],
+        'price': price[i],
+        'name': name[i],
+        'comment': comment[i]
+    }
+    list.append(data)
+print(list)
