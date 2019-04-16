@@ -13,7 +13,7 @@ mail_content = '''
 '''
 msg = MIMEText(mail_content,'html','utf-8')
 from_addr = '1640191389@qq.com'
-from_pwd = 'hbftrbzffzbqefjf'
+from_pwd = 'hbftrb'
 
 to_addr = '18330016979@163.com'
 smtp_srv = 'smtp.qq.com'
