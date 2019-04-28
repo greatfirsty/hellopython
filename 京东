@@ -1,0 +1,94 @@
+# -*- coding: utf-8 -*-
+import scrapy
+from Jing_D.items import JingDItem
+
+class LookSpider(scrapy.Spider):
+    name = 'look'
+    allowed_domains = ['jd.com']
+    #start_urls = ['https://www.jd.com/']
+    keyword = '母婴用品'
+    page = 1
+    start_urls = 'https://search.jd.com/Search?keyword={}&enc=utf-8&wq={}&pvid=2add1fce9fb6420d9f06e2e3830c0a70'
+    next_url= 'https://search.jd.com/s_new.php?keyword=%s&enc=utf-8&qrst=1&rt=1&stop=1&vt=2&wq=%s&stock=1&page=%d&s=27&scrolling=y&log_id=1552621824.84189&tpl=1_M&show_items=%s'
+    def start_requests(self):
+        yield scrapy.Request(self.start_urls.format(self.keyword,self.keyword),callback=self.parse)
+    def parse(self, response):
+        item = JingDItem()
+        #res = response.xpath("//div[@class='m-list']/div[@class='ml-wrap']/div[@id='J_goodsList']/ul[@class='gl-warp clearfix']/li/div[@class='gl-i-wrap']/div[@class='p-name p-name-type-2']/a/em")
+       #提取多层标签内的内容
+        #res = res.xpath("string(.)").extract()
+        #print(res)
+        #啊如果只是单纯爬取价格，店铺，商品，就不需要进入具体页了，因为没必要，如果需要介入具体页
+        #比如价格这一块，再具体页是看不到的，因为被隐藏了
+        ids = []
+        href_list = response.xpath("//div[@id='J_goodsList']/ul/li")
+        #print(href_list)
+
+        for href in href_list:
+            #价格
+            price = href.xpath("div/div/strong/i/text()").extract()
+            #评论数
+            comment = href.xpath("div[@class='gl-i-wrap']/div[@class='p-commit']/strong/a/text()").extract()
+            #名字
+            title = href.xpath("div[@class='gl-i-wrap']/div[@class='p-name p-name-type-2']/a/em")
+            title =title.xpath('string(.)').extract()
+            item['price'] = price
+            item['comment'] = comment
+            item['title'] = title
+
+            id = href.xpath("@data-sku").extract()
+            ids.append(" ".join(id))
+
+            #连接
+            url = href.xpath("div[@class='gl-i-wrap']/div[@class='p-img']/a/@href").extract()
+            url = "".join(url)
+            if url.startswith('//'):
+                url = 'https:' + url
+                item['url'] = url
+            elif not url.startswith('https:'):
+                url = None
+                item['url'] = url
+                continue
+            yield item
+            #如果href存在HTTPS，就不要拼接了
+            yield scrapy.Request(url=url,callback=self.parse_detail)
+        headers ={
+            'referer':response.url
+        }
+        self.page +=1
+        yield scrapy.Request(self.next_url%(self.keyword,self.keyword,self.page,",".join(ids)),callback=self.parse_next,headers=headers)
+            #yield scrapy.Request(url=href,callback=self.parse_detail)
+    #这里是获取前三十个商品的具体页面的数据
+
+    def parse_detail(self,response):
+
+      #这里可以获取前三十个商品的具体信息，不过貌似没啥用
+        #print('*'*(100))
+        href = response.xpath("//div[@class='itemInfo-wrap']/div[@class='summary summary-first']/div[@class='summary-price-wrap']/div[@class='summary-price J-summary-price']/div[@class='dd']/span[@class='p-price']").extract()
+
+        #print(href)
+
+    def parse_next(self,response):
+        item = JingDItem()
+        for li in response.xpath("//li[@class='gl-item']"):
+            title = li.xpath("div/div/a/em/text()")[0].extract()
+            price = li.xpath('div/div/strong/i/text()').extract()  # 价格
+            comment = li.xpath('div/div/strong/a/text()').extract()  # 评价条数
+            url = li.xpath('div/div[@class="p-name p-name-type-2"]/a/@href')[0].extract()
+            item['title'] =title
+            item['price'] = price
+            item['comment'] = comment
+            print(item)
+
+            if url.startswith('//'):
+                url = 'https:' + url
+                item['url'] = url
+            elif not url.startswith('https:'):
+                url = None
+                item['url'] = url
+                #返回item对象
+            yield item
+
+#将将缓存的和显存的href都进行判断
+
+#这里页码还要注意一下

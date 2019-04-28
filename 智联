@@ -1,0 +1,57 @@
+import csv
+import json
+import random
+
+import time
+from lxml import etree
+
+import requests
+url1 = 'https://fe-api.zhaopin.com/c/i/sou?'
+
+for i in range(1,7):
+    data={
+    'pageSize':str(i*90),
+    'cityId': ' 530',
+    'salary': ' 0,0',
+    'workExperience': ' -1',
+    'education': ' -1',
+    'companyType': ' -1',
+    'employmentType': ' -1',
+    'jobWelfareTag': ' -1',
+    'kw': ' python',
+    'kt': ' 3',
+    'at': ' 9f121056528d40e59c3e32d3e27412fd',
+    'rt': ' 5fa7f98bc206477e8b4a5c3ba12c3759',
+    '_v': ' 0.38526345',
+    'userCode': ' 1029561270',
+    'x-zp-page-request-id': ' 3341f36aa5f14cccb2ba258cbd86ee9d-1555031808781-76197',
+    }
+    headers={
+        'Cookie': 'sts_deviceid=165a986d638575-0a166b86e3f051-323b5b03-1049088-165a986d63952b; Hm_lvt_d838d7d6abb840b6c1a339ec5aee915d=1536147524; adfbid2=0; __xsptplus30=30.11.1554110650.1554110650.1%232%7Csp0.baidu.com%7C%7C%7C%25E6%2599%25BA%25E8%2581%2594%25E6%258B%259B%25E8%2581%2598%7C%23%23ZJurnr9PN4wk5lyOmg5Skwmd2XMtnT5i%23; _jzqa=1.2634623768107933700.1536147513.1554080466.1554110651.9; _jzqy=1.1536147513.1554110651.6.jzqsr=baidu|jzqct=%E6%99%BA%E8%81%94.jzqsr=baidu|jzqct=%E6%99%BA%E8%81%94%E6%8B%9B%E8%81%98; acw_tc=2760823615541712082108416e405d9b2052aa92a320e88e915b048b7dc9ff; select_city_code=569; select_city_name=%E9%82%A2%E5%8F%B0; select_city_en_name=xingtai; JSloginnamecookie=18330016979; JSShowname=""; at=9f121056528d40e59c3e32d3e27412fd; rt=5fa7f98bc206477e8b4a5c3ba12c3759; JSpUserInfo=236a2d6b566a5b6458695b755c72507347765b69596b5d6a5468526939653c654e71476a516b586a5964586959755472537348765d69526b516a21682469486543654b71456a5a6b5b6a5a6459695f755c72527348762a695a6b5c6a5768476916651d651e714d6a3a6b3f6a576459695275247231734c765969466b5e6a44685869426548654771416a526b2a6a2664556958755e72307330765769216b236a56685069406544654271446a5e6b5b6a5c6453693c753172587340765169386b236a596859694e652; uiioit=3d79306c4d73556554644564083251684f745d704164526454775f3170642c79496c40735f652; ZP_OLD_FLAG=false; LastCity=%E5%8C%97%E4%BA%AC; LastCity%5Fid=530; jobRiskWarning=true; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%221029561270%22%2C%22%24device_id%22%3A%22167bf3c86af33a-0da031fb276f91-3a3a5d0c-1049088-167bf3c86b1544%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E8%87%AA%E7%84%B6%E6%90%9C%E7%B4%A2%E6%B5%81%E9%87%8F%22%2C%22%24latest_referrer%22%3A%22https%3A%2F%2Fwww.baidu.com%2Flink%22%2C%22%24latest_referrer_host%22%3A%22www.baidu.com%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC%22%2C%22%24latest_utm_source%22%3A%22baidupcpz%22%2C%22%24latest_utm_medium%22%3A%22cpt%22%2C%22%24latest_utm_campaign%22%3A%22pp%22%2C%22%24latest_utm_content%22%3A%22pp%22%2C%22%24latest_utm_term%22%3A%228804696%22%7D%2C%22first_id%22%3A%22167bf3c86af33a-0da031fb276f91-3a3a5d0c-1049088-167bf3c86b1544%22%7D; urlfrom=121114583; urlfrom2=121114583; adfcid=www.baidu.com; adfcid2=www.baidu.com; adfbid=0; dywea=95841923.844886415384557700.1536147509.1554976042.1555031795.22; dywec=95841923; dywez=95841923.1555031795.22.22.dywecsr=baidu|dyweccn=(organic)|dywecmd=organic; dyweb=95841923.1.10.1555031795; Hm_lvt_38ba284938d5eddca645bb5e02a02006=1554688590,1554976042,1554977376,1555031795; __utma=269921210.417606196.1536147509.1554976042.1555031796.23; __utmc=269921210; __utmz=269921210.1555031796.23.22.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; __utmt=1; __utmb=269921210.1.10.1555031796; sts_sg=1; sts_sid=16a0f1e27c64bd-09afa9825f2951-39395704-1049088-16a0f1e27c746c; sts_chnlsid=Unknown; zp_src_url=https%3A%2F%2Fwww.baidu.com%2Flink%3Furl%3Dm8MTTUC8m8hMFyQVidri4H6O65hZN3bdsuFxxIHaGj1aHdPacOUtpCL-rSGjSsxr%26wd%3D%26eqid%3Dd98ad8860016f734000000035cafe6e8; loginreleased=1; JsNewlogin=3088683812; Hm_lpvt_38ba284938d5eddca645bb5e02a02006=1555031802; ZL_REPORT_GLOBAL={%22sou%22:{%22actionid%22:%22098d68ef-08c0-469a-aa20-688acc8a05a6-sou%22%2C%22funczone%22:%22smart_matching%22}}; sts_evtseq=4',
+
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36',
+    }
+    # 1  ... 0.42685325   ....0.20523398   ...0.04330551  ...0.45408523
+    #v post发送过去，解码，得到页码
+    #页码不变，时间变化
+    # 2..0.38742392     .... 0.44158814
+    # 3..... 0.44546515
+    #4... 0.55926118
+    #5...0.44564059
+    t=requests.get(url=url1,params=data,headers=headers,)
+    t = t.content.decode()
+
+    time.sleep(3)
+    p=json.loads(t)
+    print(p)
+    list = p['data']['results']
+    for i in list:
+            name = i['company']['name']
+
+            size = i['company']['size']['name']
+            type = i['company']['type']['name']
+            url = i['company']['url']
+            salary = i['salary']
+            exp = i['workingExp']
+            print(exp)
+            jobname = i['jobName']
