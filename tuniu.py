@@ -37,5 +37,8 @@ for i in html:
     position_lat = i.xpath("property[@name = 'pos']/object/property[@name ='lat']/string/text()")[0]
     print(position_lat)
     #剩下的不想写了，无非从里面找找数据
+    #傻逼了，我以为数据都是放在script里面呢，谁知道都放在ajax里呢，直接通过链接获取数据就可以了
+    #url='https://hotel.tuniu.com/ajax/list?search%5BcityCode%5D=200&search%5BcheckInDate%5D=2019-05-05&search%5BcheckOutDate%5D=2019-05-06&search%5Bkeyword%5D=&suggest=&sort%5Bfirst%5D%5Bid%5D=recommend&sort%5Bfirst%5D%5Btype%5D=&sort%5Bsecond%5D=&sort%5Bthird%5D=cash-back-after&page=3&returnFilter=0'
+
 
 
