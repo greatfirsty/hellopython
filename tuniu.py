@@ -19,8 +19,23 @@ content = js2xml.parse(pp,encoding='utf8',debug=False)
 parse_tree = js2xml.pretty_print(content)
 print(parse_tree)
 selector = etree.HTML(parse_tree)
-names = selector.xpath("//property[@name='list']/array/object/property[@name='name']/string/text()")
-for i in names:
-    print(i)
+html = selector.xpath("//property[@name='list']/array/object")
+
+for i in html:
+    name = i.xpath("property[@name ='name']/string/text()")[0]
+    print(name)
+    url = i.xpath("property[@name = 'url']/string/text()")[0]
+    url = 'https://hotel.tuniu.com'+url
+    print(url)
+    level = i.xpath("property[@name='levelInfo']/object/property[@name='name']/string/text()")[0]
+    print(level)
+    address = i.xpath("property[@name = 'address']/string/text()")[0]
+    print(address)
+    addressInfo = i.xpath("property[@name = 'addressInfo']/string/text()")[0]
+    print(addressInfo)
+    position_lng = i.xpath("property[@name = 'pos']/object/property[@name ='lng']/string/text()")[0]
+    position_lat = i.xpath("property[@name = 'pos']/object/property[@name ='lat']/string/text()")[0]
+    print(position_lat)
+    #剩下的不想写了，无非从里面找找数据
 
 
