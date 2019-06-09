@@ -61,4 +61,6 @@ if __name__ == '__main__':
         for i in rep:
             bookname, name, texts=get_content(i)
             save(bookname, name, texts)
-#出现的问题，没有用多线程进行任务，速度比较慢，另外，下载的书籍章节顺序乱了，需要Oder
+#出现的问题，没有用多线程进行任务，速度比较慢，另外，下载的书籍章节顺序乱了，需要Order
+#针对问题，要考虑在哪里进行多线程处理
+#个人考虑使用消息队列
