@@ -9,10 +9,10 @@ with open('02.html','rb')as f:
     m['Content-Type'] = 'application/octet-stream'
     m['Content-Disposition'] = "attachment;filename='02.html'"
     email_mul.attach(m)
-from_addr = '1640191389@qq.com'
+from_addr = '16401@qq.com'#发送者邮箱
 from_pwd = 'hbftrbzff'
 
-to_addr = '18330016979@163.com'
+to_addr = '1833009@163.com'#接受者邮箱
 smtp_srv = 'smtp.qq.com'
 try:
     import smtplib
