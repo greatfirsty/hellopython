@@ -1,20 +1,16 @@
 import time
-
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-
-from selenium.webdriver.support import expected_conditions as EC
 def login():
     dr = webdriver.Chrome()
     #打开登陆163邮箱的网页
     dr.get('http://mail.163.com/')
     #将浏览器窗口最大化
     dr.maximize_window()
-    #休息五分钟等待网页加载完毕    time.sleep(5)
     #找到邮箱账号登录框对应的iframe
     dr.find_element_by_xpath(" // *[ @ id = 'lbNormal']").click()
+    #这里选中提交框
     aa = dr.find_element_by_xpath('//*[@id="loginDiv"]/iframe')
+    #将操作转向提交框
     dr.switch_to.frame(aa)
 
     #将自己的邮箱地址输入到邮箱账号框中
