@@ -1,13 +1,7 @@
 import unittest
-
-import testadd
-import testsub
-
-suite = unittest.TestSuite()
-suite.addTest(testadd.Test_add('testadd'))
-suite.addTest(testadd.Test_add('testadd2'))
-suite.addTest(testsub.Test_sub('testsub'))
-suite.addTest(testsub.Test_sub('testsub2'))
+test_dir = './'
+discover = unittest.defaultTestLoader.discover(test_dir,pattern='test*.py')
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()
-    runner.run(suite)
+    runner.run(discover)
+#自动根据测试目录匹配查找文件，并将查找到的测试用例组装到测试套装中，通过run方法进行测试
